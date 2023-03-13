@@ -1,21 +1,22 @@
 import 'package:flutter/material.dart';
-
-import '../../models/user_model.dart';
+import 'package:model_test/pages/view_models/profile_view_model.dart';
+import 'package:provider/provider.dart';
 
 class ProfilePage extends StatelessWidget {
-  final User user;
-  const ProfilePage({super.key, required this.user});
+  const ProfilePage({super.key});
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Column(
-        children: [
-          Image.network(user.avatar!),
-          Text(user.firstName!),
-          Text(user.lastName!),
-          Text(user.email!)
-        ],
+      body: Center(
+        child: Column(
+          children: [
+            Image.network(context.watch<ProfileViewModel>().user!.avatar!),
+            Text(context.watch<ProfileViewModel>().user!.firstName!),
+            Text(context.watch<ProfileViewModel>().user!.lastName!),
+            Text(context.watch<ProfileViewModel>().user!.email!)
+          ],
+        ),
       ),
     );
   }
