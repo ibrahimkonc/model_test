@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:model_test/models/user_model.dart';
 import 'package:model_test/pages/view_models/profile_view_model.dart';
 import 'package:provider/provider.dart';
 

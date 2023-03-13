@@ -8,10 +8,14 @@ import 'package:http/http.dart' as http;
 
 class ProfileViewModel extends ChangeNotifier {
   User? user;
+  final String _baseUrl = "https://reqres.in/api/users";
+  List<User> users = [];
+  int perPage = 6;
+  int page = 1;
+  int totalPage = 1;
 
-  Future getUser() async {
-    http.Response response =
-        await http.get(Uri.parse('https://reqres.in/api/users/2'));
+  Future getUser(int id) async {
+    http.Response response = await http.get(Uri.parse("$_baseUrl/$id"));
 
     if (response.statusCode == 200) {
       var map = json.decode(response.body);
@@ -20,9 +24,22 @@ class ProfileViewModel extends ChangeNotifier {
       throw Exception('Failed to load album');
     }
     notifyListeners();
-    // String data =
-    //     '{"data":{"id":2,"email":"janet.weaver@reqres.in","first_name":"Janet","last_name":"Weaver","avatar":"https://reqres.in/img/faces/2-image.jpg"},"support":{"url":"https://reqres.in/#support-heading","text":"To keep ReqRes free, contributions towards server costs are appreciated!"}}';
-    // var map = json.decode(data);
-    // user = User.fromJson(map["data"]);
+  }
+
+  Future getUsers() async {
+    http.Response response =
+        await http.get(Uri.parse("$_baseUrl?page=$page&per_page=$perPage"));
+    var map = json.decode(response.body);
+    users.clear();
+    totalPage = map["total_pages"];
+    for (var element in map["data"]) {
+      users.add(User.fromJson(element));
+    }
+    notifyListeners();
+  }
+
+  Future setPage(int p) async {
+    page = p;
+    await getUsers();
   }
 }
