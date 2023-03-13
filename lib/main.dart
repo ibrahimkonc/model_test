@@ -42,7 +42,7 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   int _counter = 0;
 
-  void _incrementCounter() {
+  Future<void> _incrementCounter() async {
     // String data =
     //     '{"data":{"id":2,"email":"janet.weaver@reqres.in","first_name":"Janet","last_name":"Weaver","avatar":"https://reqres.in/img/faces/2-image.jpg"},"support":{"url":"https://reqres.in/#support-heading","text":"To keep ReqRes free, contributions towards server costs are appreciated!"}}';
     // var map = json.decode(data);
@@ -51,7 +51,7 @@ class _MyHomePageState extends State<MyHomePage> {
     // //     User(id: map["data"]["id"], firstName: map["data"]["first_name"]);
 
     // User user = User.fromJson(map["data"]);
-    context.read<ProfileViewModel>().getUser();
+    await context.read<ProfileViewModel>().getUser();
     Navigator.push(
         context,
         MaterialPageRoute(
