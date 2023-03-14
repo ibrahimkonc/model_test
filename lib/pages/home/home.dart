@@ -30,60 +30,73 @@ class _HomePageState extends State<HomePage> {
         child: Column(
           children: [
             Expanded(
-              child: ListView.builder(
-                itemCount: context.watch<ProfileViewModel>().users.length,
-                itemBuilder: (context, index) {
-                  User user = context.watch<ProfileViewModel>().users[index];
-                  return Container(
-                    child: Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Row(
-                        children: [
-                          ClipRRect(
-                            borderRadius: BorderRadius.circular(4),
-                            child: Stack(
-                              children: <Widget>[
-                                Positioned.fill(
-                                  child: Container(
-                                    decoration: const BoxDecoration(
-                                      gradient: LinearGradient(
-                                        colors: <Color>[
-                                          Color(0xFF0D47A1),
-                                          Color(0xFF1976D2),
-                                          Color(0xFF42A5F5),
-                                        ],
+              child: Stack(
+                children: [
+                  ListView.builder(
+                    itemCount: context.watch<ProfileViewModel>().users.length,
+                    itemBuilder: (context, index) {
+                      User user =
+                          context.watch<ProfileViewModel>().users[index];
+                      return Container(
+                        child: Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Row(
+                            children: [
+                              ClipRRect(
+                                borderRadius: BorderRadius.circular(4),
+                                child: Stack(
+                                  children: <Widget>[
+                                    Positioned.fill(
+                                      child: Container(
+                                        decoration: const BoxDecoration(
+                                          gradient: LinearGradient(
+                                            colors: <Color>[
+                                              Color(0xFF0D47A1),
+                                              Color(0xFF1976D2),
+                                              Color(0xFF42A5F5),
+                                            ],
+                                          ),
+                                        ),
                                       ),
                                     ),
-                                  ),
+                                    TextButton.icon(
+                                        style: TextButton.styleFrom(
+                                          foregroundColor: Colors.white,
+                                          padding: const EdgeInsets.all(16.0),
+                                          textStyle:
+                                              const TextStyle(fontSize: 20),
+                                        ),
+                                        onPressed: () async {
+                                          await context
+                                              .read<ProfileViewModel>()
+                                              .getUser(user.id!);
+                                          // ignore: use_build_context_synchronously
+                                          Navigator.push(
+                                              context,
+                                              MaterialPageRoute(
+                                                  builder: (context) =>
+                                                      const ProfilePage()));
+                                        },
+                                        icon: Icon(Icons.portrait_outlined),
+                                        label: Text(
+                                            " ${user.firstName!} ${user.lastName!}")),
+                                  ],
                                 ),
-                                TextButton.icon(
-                                    style: TextButton.styleFrom(
-                                      foregroundColor: Colors.white,
-                                      padding: const EdgeInsets.all(16.0),
-                                      textStyle: const TextStyle(fontSize: 20),
-                                    ),
-                                    onPressed: () async {
-                                      await context
-                                          .read<ProfileViewModel>()
-                                          .getUser(user.id!);
-                                      // ignore: use_build_context_synchronously
-                                      Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                              builder: (context) =>
-                                                  const ProfilePage()));
-                                    },
-                                    icon: Icon(Icons.portrait_outlined),
-                                    label: Text(
-                                        " ${user.firstName!} ${user.lastName!}")),
-                              ],
-                            ),
+                              ),
+                            ],
                           ),
-                        ],
-                      ),
+                        ),
+                      );
+                    },
+                  ),
+                  if (context.watch<ProfileViewModel>().loading)
+                    Column(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: const [
+                        Center(child: CircularProgressIndicator()),
+                      ],
                     ),
-                  );
-                },
+                ],
               ),
             ),
             Row(

@@ -13,9 +13,13 @@ class ProfileViewModel extends ChangeNotifier {
   int perPage = 6;
   int page = 1;
   int totalPage = 1;
+  bool loading = false;
 
   Future getUser(int id) async {
-    http.Response response = await http.get(Uri.parse("$_baseUrl/$id"));
+    loading = true;
+    notifyListeners();
+
+    http.Response response = await http.get(Uri.parse("$_baseUrl/$id?delay=3"));
 
     if (response.statusCode == 200) {
       var map = json.decode(response.body);
@@ -23,18 +27,21 @@ class ProfileViewModel extends ChangeNotifier {
     } else {
       throw Exception('Failed to load album');
     }
+    loading = false;
     notifyListeners();
   }
 
   Future getUsers() async {
-    http.Response response =
-        await http.get(Uri.parse("$_baseUrl?page=$page&per_page=$perPage"));
+    loading = true;
+    http.Response response = await http
+        .get(Uri.parse("$_baseUrl?page=$page&per_page=$perPage&delay=3"));
     var map = json.decode(response.body);
     users.clear();
     totalPage = map["total_pages"];
     for (var element in map["data"]) {
       users.add(User.fromJson(element));
     }
+    loading = false;
     notifyListeners();
   }
 
